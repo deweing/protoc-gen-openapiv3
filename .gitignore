@@ -1,0 +1,38 @@
+.idea
+.project
+.metadata
+*.tmp
+*.bak
+*.swp
+*.log
+.DS_Store
+.env
+logs/*
+/protoc-gen-openapiv3
+*.env.json
+/config/config.yaml
+/config/config.toml
+/config/config.test.toml
+*.xlsx
+*.out
+cover.html
+*.bak_*
+*.upx
+
+# Bazel.
+bazel-bin
+bazel-genfiles
+bazel-grpc-gateway
+bazel-out
+bazel-testlogs
+/.bazelrc
+
+# Go vendor directory
+vendor
+
+# Generated travis files
+.travis.yml
+
+_output/
+
+apidocs.swagger.*

@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "github.com/deweing/protoc-gen-openapiv3/swagger/annotations.proto";
+
+option go_package="github.com/deweing/example-srv/proto/example-srv";
+option (gogoproto.goproto_enum_prefix_all) = false;
+option (gogoproto.goproto_getters_all) = false;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+
+package example_srv;
+
+option (swagger.swagger) = {
+  info: {
+    title: "Example.example-srv";
+    version: "0.0.1";
+    contact: {
+      name: "Tom";
+      email: "tom@example.com";
+    };
+  };
+
+  servers: [
+    {
+      url: "https://gateway.example.com/api/example-srv",
+      description: "测试"
+    },
+    {
+      url: "https://ygateway.exmaple.com/api/example-srv",
+      description: "预发"
+    },
+    {
+      url: "https://gateway.exmaple.com/api/example-srv",
+      description: "线上"
+    }
+  ]
+
+  external_docs: {
+    url: "http://docs.exmaple.com/project/128",
+    description: "External Docs"
+  }
+
+  responses: {
+    key: "400";
+    value: {
+      description: "A failed response"
+      content: {
+        key: "application/json",
+        value: {
+          schema: {
+            json_schema: {
+              ref: ".example_srv.ErrorRsp"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+message Empty {}
+
+message ResultRsp {
+  int64 code = 1 [(gogoproto.jsontag) = "code", (gogoproto.nullable) = true, (swagger.field) = {description: "错误代码 200正常 其他错误", example: "200"}];
+  string detail = 2 [(gogoproto.jsontag) = "detail", (gogoproto.nullable) = true, (swagger.field) = {description: "错误信息"}];
+  // 返回数据
+  Data data = 3 [(gogoproto.jsontag) = "data", (gogoproto.nullable) = true];
+
+  message Data {
+    bool result = 1 [(gogoproto.jsontag) = "result", (gogoproto.nullable) = true, (swagger.field) = {description: "结果"}];
+  }
+}
+
+message ErrorRsp {
+  int64 code = 1 [(gogoproto.jsontag) = "code", (gogoproto.nullable) = true, (swagger.field) = {description: "返回代码: 200正常,其他错误", example: "100100100404"}];
+  string detail = 2 [(gogoproto.jsontag) = "detail", (gogoproto.nullable) = true, (swagger.field) = {description: "错误信息", example: "\"page not found\""}];
+}

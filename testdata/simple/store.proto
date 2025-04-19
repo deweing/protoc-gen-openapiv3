@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "github.com/deweing/protoc-gen-openapiv3/swagger/annotations.proto";
+
+option go_package="github.com/deweing/example-srv/proto/example-srv";
+option (gogoproto.goproto_enum_prefix_all) = false;
+option (gogoproto.goproto_getters_all) = false;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+
+package example_srv;
+
+// 门店
+service Store {
+  option (swagger.tag) = {description: "门店", sort:1};
+
+  // 创建门店
+  rpc Create(StoreCreateReq) returns (StoreCreateRsp) {
+    option (google.api.http) = {
+      post: "/v1/Store/Create",
+      body: "*"
+    };
+  }
+}
+
+// 门店类型
+// @govalidator required~门店类型必须;in(1|2)~值只能为1,2;
+enum StoreType {
+  // 未知、全部
+  STORE_TYPE_UNKNOWN = 0;
+  // 直营店
+  STORE_TYPE_DIRECT  = 1;
+  // 加盟店
+  STORE_TYPE_FRANCHISE = 2;
+}
+
+// 门店状态
+enum StoreStatus {
+  //未知、全部
+  STORE_STATUS_UNKNOWN = 0;
+  //启用
+  STORE_STATUS_ENABLE = 1;
+  //停用
+  STORE_STATUS_DISABLE = 2;
+}
+
+// 门店来源
+enum StoreSource {
+  //未知、全部
+  STORE_SOURCE_UNKNOWN = 0;
+  //新建
+  STORE_SOURCE_CREATE = 1;
+  //内部
+  STORE_SOURCE_INNER = 2;
+}
+
+message StoreCreateReq {
+  option (swagger.schema) = {
+    json_schema: {
+      description: "创建门店",
+      required: ["appId", "accountId", "storeName"]
+    }
+  };
+
+  // 产品ID
+  // @govalidator required~产品ID必须;stringlength(1|50)~饿了么平台ID不超过50字,optional
+  uint32 appId = 1 [(swagger.field) = {description: "产品ID2", example: "1"}];
+  //@govalidator requried~主账号ID必须
+  uint64 accountId = 2 [(swagger.field) = {description: "主账号ID", type: STRING, example: "\"100010\""}];
+  //@govalidator requried~门店名称必须,stringlength(1|100)~门店名称不超过100字
+  string storeName = 3 [(swagger.field) = {description: "门店名称", example: "\"新新超市\""}];
+  // @govalidator required~门店类型必须;in(1|2|3)~值只能为1,2,3;
+  StoreType storeType = 4;
+  //@govalidator stringlength(6|6)~地区代码为6为数字,optional
+  uint32 areaCode = 5 [(swagger.field) = {description: "地区代码", example:"511110"}];
+  string address = 6 [(swagger.field) = {description: "详细地址", example: "\"春熙路银石广场108楼\""}];
+  string storePhone = 7 [(swagger.field) = {description: "门店联系电话", example: "\"18800008888\""}];
+  string contactName = 8 [(swagger.field) = {description: "联系人", example: "\"李元芳\""}];
+  string contactPhone = 9 [(swagger.field) = {description: "联系人电话", example: "\"18800008888\""}];
+  string comment = 10 [(swagger.field) = {description: "备注", example: "\"备注\""}];
+  StoreStatus status = 11;
+  StoreSource source = 12;
+  int64 sourceId = 13 [(swagger.field) = {description: "来源账号ID", example: "123456"}];
+}
+
+message StoreCreateRsp {
+  int64 code = 1 [(gogoproto.jsontag) = "code", (gogoproto.nullable) = true, (swagger.field) = {description: "返回代码:200正常,其他错误", example: "200"}];
+  string detail = 2 [(gogoproto.jsontag) = "detail", (gogoproto.nullable) = true, (swagger.field) = {description: "错误信息"}];
+  Data data = 3 [(gogoproto.jsontag) = "data", (gogoproto.nullable) = true, (swagger.field) = {description: "返回数据"}];
+
+  message Data {
+    uint64 storeId = 1 [(gogoproto.jsontag) = "storeId", (gogoproto.nullable) = true, (swagger.field) = {description: "门店ID", example: "100010"}];
+  }
+}

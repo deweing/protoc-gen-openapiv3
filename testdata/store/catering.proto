@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "github.com/deweing/protoc-gen-openapiv3/swagger/annotations.proto";
+import "common.proto";
+
+option go_package="github.com/deweing/store-srv/proto/store-srv";
+option (gogoproto.goproto_enum_prefix_all) = false;
+option (gogoproto.goproto_getters_all) = false;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+
+package store_scene_srv;
+
+// 门店关联的平台信息
+service Catering {
+  option (swagger.tag) = {description: "门店",sort:2};
+
+  // 关联平台信息
+  rpc SaveStore(SaveStoreCateringReq) returns (ResultRsp) {
+    option (google.api.http) = {
+      post: "/v1/Catering/SaveStore",
+      body: "*"
+    };
+  }
+  // 获取门店关联的平台信息
+  rpc GetStore(GetStoreCateringReq) returns (GetStoreCateringRsp) {
+    option (google.api.http) = {
+      get: "/v1/Catering/GetStore"
+    };
+  }
+  // 批量获取门店关联的平台信息
+  rpc BatchGetStores(BatchGetStoreCateringsReq) returns (BatchGetStoreCateringsRsp) {
+    option (google.api.http) = {
+      post: "/v1/Catering/BatchGetStores",
+      body: "*"
+    };
+  }
+}
+
+message SaveStoreCateringReq {
+  option (swagger.schema) = {
+    json_schema: {
+      description: "关联的餐饮平台信息",
+      required: ["appId", "accountId", "storeId"]
+    }
+  };
+
+  uint32 appId = 1 [(swagger.field) = {description: "产品ID", example: "1"}];
+  uint64 accountId = 2 [(swagger.field) = {description: "主账号ID", example: "100010"}];
+  uint64 storeId = 3 [(swagger.field) = {description: "门店ID", example: "910011"}];
+  string eleId = 4 [(swagger.field) = {description: "饿了么平台ID", example: "10086"}];
+  string meituanId = 5 [(swagger.field) = {description: "美团平台ID", example: "10006"}];
+}
+
+message GetStoreCateringReq {
+  option (swagger.schema) = {
+    json_schema: {
+      description: "获取关联的餐饮平台信息",
+      required: ["appId", "accountId", "storeId"]
+    }
+  };
+  uint32 appId = 1 [(swagger.field) = {description: "产品ID", example: "1"}];
+  uint64 accountId = 2 [(swagger.field) = {description: "主账号ID", example: "100010"}];
+  uint64 storeId = 3 [(swagger.field) = {description: "门店ID", example: "910011"}];
+}
+
+message StoreCatering {
+  uint32 appId = 1 [(gogoproto.jsontag) = "appId", (gogoproto.nullable) = true, (swagger.field) = {description: "产品ID", example: "1"}];
+  uint64 accountId = 2 [(gogoproto.jsontag) = "accountId", (gogoproto.nullable) = true, (swagger.field) = {description: "主账号ID", example: "100010"}];
+  uint64 storeId = 3 [(gogoproto.jsontag) = "storeId", (gogoproto.nullable) = true, (swagger.field) = {description: "门店ID", example: "910011"}];
+  string eleId = 4 [(gogoproto.jsontag) = "eleId", (gogoproto.nullable) = true, (swagger.field) = {description: "饿了么平台ID", example: "10086"}];
+  string meituanId = 5 [(gogoproto.jsontag) = "meituanId", (gogoproto.nullable) = true, (swagger.field) = {description: "美团平台ID", example: "10006"}];
+}
+
+message GetStoreCateringRsp {
+  int64 code = 1 [(gogoproto.jsontag) = "code", (gogoproto.nullable) = true, (swagger.field) = {description: "返回代码:200正常,其他错误", example: "200"}];
+  string detail = 2 [(gogoproto.jsontag) = "detail", (gogoproto.nullable) = true, (swagger.field) = {description: "错误信息"}];
+  // 返回数据
+  StoreCatering data = 3 [(gogoproto.jsontag) = "data", (gogoproto.nullable) = true];
+}
+
+message BatchGetStoreCateringsReq {
+  option (swagger.schema) = {
+    json_schema: {
+      description: "批量获取关联的餐饮平台信息",
+      required: ["appId", "accountId", "storeIds"]
+    }
+  };
+  uint32 appId = 1 [(swagger.field) = {description: "产品ID", example: "1"}];
+  uint64 accountId = 2 [(swagger.field) = {description: "主账号ID", example: "100010"}];
+  repeated uint64 storeIds = 3 [(swagger.field) = {description: "主账号ID", example: "[100010]"}];
+}
+
+message BatchGetStoreCateringsRsp {
+  int64 code = 1 [(gogoproto.jsontag) = "code", (gogoproto.nullable) = true, (swagger.field) = {description: "返回代码:200正常,其他错误", example: "200"}];
+  string detail = 2 [(gogoproto.jsontag) = "detail", (gogoproto.nullable) = true, (swagger.field) = {description: "错误信息"}];
+  // 返回数据
+  Data data = 3 [(gogoproto.jsontag) = "data", (gogoproto.nullable) = true];
+
+  message Data {
+    // 门店
+    repeated StoreCatering stores = 1 [(gogoproto.jsontag) = "stores", (gogoproto.nullable) = true];
+  }
+}

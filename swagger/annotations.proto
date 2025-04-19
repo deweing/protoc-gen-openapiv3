@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package swagger;
+
+import "google/protobuf/descriptor.proto";
+import "github.com/deweing/protoc-gen-openapiv3/swagger/openapiv3.proto";
+
+option go_package = "github.com/deweing/protoc-gen-openapiv3/swagger";
+
+extend google.protobuf.FileOptions {
+  // ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
+  //
+  // All IDs are the same, as assigned. It is okay that they are the same, as they extend
+  // different descriptor messages.
+  Swagger swagger = 1042;
+}
+extend google.protobuf.MethodOptions {
+  // ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
+  //
+  // All IDs are the same, as assigned. It is okay that they are the same, as they extend
+  // different descriptor messages.
+  Operation operation = 1042;
+}
+extend google.protobuf.MessageOptions {
+  // ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
+  //
+  // All IDs are the same, as assigned. It is okay that they are the same, as they extend
+  // different descriptor messages.
+  Schema schema = 1042;
+}
+extend google.protobuf.ServiceOptions {
+  // ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
+  //
+  // All IDs are the same, as assigned. It is okay that they are the same, as they extend
+  // different descriptor messages.
+  Tag tag = 1042;
+}
+extend google.protobuf.FieldOptions {
+  // ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
+  //
+  // All IDs are the same, as assigned. It is okay that they are the same, as they extend
+  // different descriptor messages.
+  JSONSchema field = 1042;
+}
